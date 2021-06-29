@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class UsersController extends AbstractController
 {
+    private $weather_app_id = "58fe595a877c084fc797adfc56976096";
+    
     /**
      * @Route("/app/v1/", name="index")
      */
@@ -32,9 +34,12 @@ class UsersController extends AbstractController
     {       
         $userId = $request->get('userid');
         $user  = $this->getDoctrine()->getRepository(Users::class)->findOneBy(['id' => $userId]);
-        
+
+
         $httpClient = HttpClient::create();
-        $response = $httpClient->request('GET', 'http://api.openweathermap.org/data/2.5/weather?q='.$user->getCity().','.$user->getState().'&appid=58fe595a877c084fc797adfc56976096');
+        //$response = $httpClient->request('GET', 'http://api.openweathermap.org/data/2.5/weather?q='.$user->getCity().','.$user->getState().'&appid=58fe595a877c084fc797adfc56976096');
+
+        $response = $httpClient->request('GET', 'http://api.openweathermap.org/data/2.5/weather?q='.$user->getCity().','.$user->getState().'&appid='.$this->weather_app_id);
 
         $content = $response->getContent();
         $content = $response->toArray();
